@@ -74,14 +74,17 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      /* Fixed navbar */
+      top: 0;
+      z-index: 1000;
     }
 
     .navbar p {
       font-size: 28px;
-      margin: 0 0 8px 0;
+      margin: 0;
       font-weight: bold;
       padding: 0px;
-      margin: 0px;
     }
 
     .search-container {
@@ -118,6 +121,12 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      background: var(--bg);
+      position: sticky;
+      /* Fixed filter buttons */
+      top: 60px;
+      /* Offset from navbar */
+      z-index: 999;
     }
 
     .filters button {
@@ -163,9 +172,7 @@
 
     th {
       background: #bec4c7;
-      position: sticky;
-      top: 0;
-      z-index: 1;
+      /* No sticky position now */
     }
 
     a.pdf-link {
@@ -259,7 +266,7 @@
     }
 
     @media(max-width:576px) {
-      .navbar h1 {
+      .navbar p {
         font-size: 18px;
       }
 
@@ -289,19 +296,20 @@
 
       .filters button {
         padding: 4px 6px;
-        font-size: 20px;
+        font-size: 10px;
       }
     }
   </style>
 
-  </style>
+
 </head>
 
 <body>
   <div class="navbar">
-    <p>MPQP <a style="font-size: 15px; gap: 20px; color: rgb(153, 153, 227);" href="https://forms.gle/1szYNcwECgATXsP67">Add New Question Paper</a></p>
+    <p>MPQP <a style="font-size: 15px; gap: 20px; color: rgb(153, 153, 227);"
+        href="https://forms.gle/1szYNcwECgATXsP67">Add New Question Paper</a></p>
     <div class="search-container">
-      <input id="searchBar" type="text" placeholder="Search any value...">
+      <input id="searchBar" type="text" placeholder="Search...">
       <button class="clear-btn" id="clearSearch">×</button>
     </div>
   </div>
@@ -315,24 +323,35 @@
     <button class="filter-btn" data-branch="CHE">CHE</button>
     <button class="filter-btn" data-branch="AUTO">AUTO</button>
   </div>
+  <div class="filters">
+    <button class="year-btn active" data-year="All">All Years</button>
+    <button class="year-btn" data-year="2024">2024</button>
+    <button class="year-btn" data-year="2025">2025</button>
+  </div>
   <div id="status"></div>
   <div class="table-container" id="tableWrap"></div>
 
   <script>
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
+
     let allData = [];
     let filteredBranch = "All";
+    let filteredYear = "All";
 
+    const romanToNumber = { "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6 };
+
+    // CSV parse
     function parseCSV(text) {
       const rows = [], lines = text.split(/\r?\n/);
       for (let line of lines) {
         const cols = line.split(",").map(v => v.trim());
-        if (cols.every(c => c === "")) continue; // skip empty rows
+        if (cols.every(c => c === "")) continue;
         rows.push(cols);
       }
       return rows;
     }
 
+    // Unique rows
     function uniqueRows(rows) {
       const seen = new Set(), unique = [];
       for (let r of rows) {
@@ -342,12 +361,25 @@
       return unique;
     }
 
-    function highlightMatch(text, term) {
-      if (!term) return text;
-      const regex = new RegExp(`(${term})`, "gi");
-      return text.replace(regex, "<span class='highlight'>$1</span>");
+    // Normalize text
+    function normalizeText(text) {
+      return (text || "").toLowerCase().replace(/[-\/\\]/g, " ").replace(/\s+/g, " ").trim();
     }
 
+    // Highlight search term
+    function highlightMatch(text, term) {
+      if (!term) return text;
+      const words = term.split(/\s+/).map(w => w.replace(/[-\/\\]/g, ""));
+      let highlighted = text;
+      words.forEach(word => {
+        if (!word) return;
+        const regex = new RegExp(`(${word})`, "gi");
+        highlighted = highlighted.replace(regex, "<span class='highlight'>$1</span>");
+      });
+      return highlighted;
+    }
+
+    // Render table
     function renderTable(rows, searchTerm = "") {
       const tableWrap = document.getElementById("tableWrap");
       tableWrap.innerHTML = "";
@@ -355,10 +387,14 @@
         tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
         return;
       }
+
       const table = document.createElement("table");
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
-      rows[0].forEach(h => {
+
+      // Only visible columns
+      const header = rows[0].filter((_, idx) => !/Timestamp|Branch Name|Year/i.test(rows[0][idx]));
+      header.forEach(h => {
         const th = document.createElement("th");
         th.textContent = h;
         trh.appendChild(th);
@@ -368,28 +404,38 @@
 
       const tbody = document.createElement("tbody");
       for (let i = 1; i < rows.length; i++) {
-        const r = rows[i];
-        const tr = document.createElement("tr");
+        // Only visible columns
+        const r = rows[i].filter((_, idx) => !/Timestamp|Branch Name|Year/i.test(rows[0][idx]));
         if (r.length === 0) continue;
+
+        const tr = document.createElement("tr");
         r.forEach(cell => {
           const td = document.createElement("td");
-          let val = cell || "";
+          const val = cell || "";
+
+          // Only actual table content, ignore HTML/JS suggestions
           if (/https?:\/\//.test(val)) {
             const a = document.createElement("a");
-            a.href = val; a.target = "_blank"; a.textContent = "Open PDF";
+            a.href = val;
+            a.target = "_blank";
+            a.textContent = "Open PDF";
             a.className = "pdf-link";
             td.appendChild(a);
           } else {
-            td.innerHTML = highlightMatch(val, searchTerm);
+            td.textContent = val; // plain text only
+            td.innerHTML = highlightMatch(td.textContent, searchTerm); // highlight search
           }
+
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       }
+
       table.appendChild(tbody);
       tableWrap.appendChild(table);
     }
 
+    // Load sheet
     async function loadSheet() {
       const status = document.getElementById("status");
       status.innerHTML = '<div class="loader"></div>Loading data...';
@@ -400,41 +446,76 @@
         rows = uniqueRows(rows);
         allData = rows;
         renderTable(rows);
-        status.textContent = `Total number of papers available ${rows.length - 1}`;
+        status.textContent = `Total number of papers available: ${rows.length - 1}`;
       } catch (err) {
         status.textContent = "Error loading sheet.";
         console.error(err);
       }
     }
 
+    // Smart search logic
     function filterData(searchTerm) {
-      const term = searchTerm.trim().toLowerCase();
+      const term = normalizeText(searchTerm);
       let rows = [...allData];
+
+      const header = rows[0];
+      const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
+      const yearIndex = header.findIndex(h => /Year/i.test(h));
+
+      // Branch filter
       if (filteredBranch !== "All") {
-        const header = rows[0];
-        const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
         rows = rows.filter((r, i) => i === 0 || (r[branchIndex] && r[branchIndex].toLowerCase() === filteredBranch.toLowerCase()));
       }
-      if (term) {
-        const header = rows[0];
-        const filtered = [header];
-        for (let i = 1; i < rows.length; i++) {
-          const rowText = rows[i].join(" ").toLowerCase();
-          if (rowText.includes(term)) filtered.push(rows[i]);
-        }
-        renderTable(filtered, term);
-      } else {
-        renderTable(rows);
+
+      // Year filter
+      if (filteredYear !== "All") {
+        rows = rows.filter((r, i) => i === 0 || (r[yearIndex] && r[yearIndex] === filteredYear));
       }
+
+      if (!term) { renderTable(rows); return; }
+
+      const filtered = [header];
+      const searchIndexes = header.map((h, idx) => !/Timestamp|Branch Name|Year/i.test(h) ? idx : -1).filter(idx => idx !== -1);
+      let priorityMatchFound = false;
+
+      for (let i = 1; i < rows.length; i++) {
+        const rowCells = searchIndexes.map(idx => normalizeText(rows[i][idx]));
+        const rowText = rowCells.join(" ");
+
+        // Semester matching: numbers + Roman numerals
+        const words = term.split(/\s+/);
+        let match = words.every(word => {
+          const semInput = word.match(/^(1|2|3|4|5|6|i{1,3}|iv|v|vi)$/i);
+          if (semInput) {
+            const semNum = parseInt(semInput[1]) || romanToNumber[semInput[1].toUpperCase()];
+            const rowSem = rowText.match(/semester\s*(\d+|i{1,3}|iv|v|vi)/i);
+            if (rowSem) {
+              const rowNum = parseInt(rowSem[1]) || romanToNumber[rowSem[1].toUpperCase()];
+              if (rowNum === semNum) return true;
+            }
+            return false;
+          }
+          // Partial text match
+          return rowCells.some(c => c.includes(word));
+        });
+
+        // Priority match: exact row match or semester match
+        if (rowText.includes(term) || match) {
+          if (!priorityMatchFound) {
+            filtered.length = 1;
+            priorityMatchFound = true;
+          }
+          filtered.push(rows[i]);
+        }
+      }
+
+      renderTable(filtered, searchTerm);
     }
 
-    document.getElementById("searchBar").addEventListener("input", (e) => {
-      filterData(e.target.value);
-    });
-
+    // Event listeners
+    document.getElementById("searchBar").addEventListener("input", (e) => filterData(e.target.value));
     document.getElementById("clearSearch").addEventListener("click", () => {
-      const s = document.getElementById("searchBar");
-      s.value = "";
+      document.getElementById("searchBar").value = "";
       renderTable(allData);
     });
 
@@ -447,8 +528,18 @@
       });
     });
 
+    document.querySelectorAll(".year-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filteredYear = btn.dataset.year;
+        filterData(document.getElementById("searchBar").value);
+      });
+    });
+
     window.addEventListener("load", loadSheet);
   </script>
+
   <script src="inspact_block.js"></script>
 </body>
 
