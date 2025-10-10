@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <!-- Basic Meta Tags -->
+ <!-- Basic Meta Tags -->
+<title>HD Image to PDF Converter |MPQP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Basic Meta Tags -->
+<title>HD Image to PDF Converter – Convert High Quality Images to A4 PDFs</title>
+<meta name="description" content="Convert images into high-quality A4-sized PDFs with the HD Image to PDF Converter by PrimeProjects. Fast, reliable, and perfect for printing and sharing.">
+
+<!-- Open Graph for Social Media Sharing -->
+<meta property="og:title" content="HD Image to PDF Converter – MPQP">
+<meta property="og:description" content="Easily convert photos to crisp A4-sized PDFs. Perfect for students, professionals, and official documents.">
+<meta property="og:url" content="https://mpqp.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://mpqp.netlify.app/">
+
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HD Image to PDF Converter – MPQP">
+<meta name="twitter:description" content="Quickly turn images into professional PDFs with just one click. Supports high-resolution photos and A4 formatting.">
+<meta name="twitter:image" content="https://mpqp.netlify.app/">
+
+<!-- SEO Keywords -->
+<meta name="keywords" content="Image to PDF, Photo to PDF, Convert JPG to PDF, HD Image to PDF Converter, Online PDF Converter, A4 PDF Converter, MPQP Tools, Free Image to PDF Tool, Convert PNG to PDF, Online PDF Maker">
+<link rel="canonical" href="https://mpqp.netlify.app/" />
+<!-- Favicon for all browsers -->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+
+  <!-- PNG favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+
+  <!-- Apple touch icon (for iOS devices) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Android icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/android-chrome-512x512.png">
+
+  <!-- Theme & tile colors -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+  <style>
+:root {
+  --primary: #0b5ed7;
+  --bg: #f8f9fa;
+  --text: #1c1c1e;
+  --white: #ffffff;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.2s ease;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  background: var(--white);
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  font-size: 28px;
+  margin: 0;
+  color: var(--primary);
+}
+
+header p {
+  margin-top: 8px;
+  color: #666;
+  font-size: 15px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background: var(--white);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.upload-area {
+  border: 2px dashed #ccc;
+  padding: 60px 30px;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  border-radius: var(--radius);
+  background: #f1f3f5;
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  background: #e9f3ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.preview-section {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.img-box {
+  width: 300px;
+  max-width: 100%;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 15px;
+  text-align: center;
+}
+
+.img-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  object-fit: contain;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+input[type="text"]:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.btn-download {
+  display: block;
+  margin: 40px auto 20px;
+  padding: 15px 50px;
+  font-size: 17px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: auto;
+}
+
+.btn-download:hover {
+  background-color: #084298;
+}
+
+#loading {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 20px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #fff;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  .img-box {
+    width: 90%;
+  }
+
+  .btn-download {
+    width: 90%;
+  }
+
+  .container {
+    padding: 30px 20px;
+  }
+
+  header h1 {
+    font-size: 24px;
+  }
+
+  .upload-area {
+    padding: 40px 20px;
+    font-size: 16px;
+  }
+}
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>Pro Image to PDF Tool</h1>
+    <p>Convert your images into beautiful HD PDFs instantly</p>
+  </header>
+
+  <div class="container">
+    <div id="uploader" class="upload-area">📁 Click or Drag & Drop Images Here</div>
+    <div id="preview" class="preview-section"></div>
+  </div>
+
+  <button class="btn-download" onclick="generatePDF()">Download PDF</button>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <div id="countdown">Generating PDF...</div>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const uploader = document.getElementById("uploader");
+const preview = document.getElementById("preview");
+const loading = document.getElementById("loading");
+const countdown = document.getElementById("countdown");
+let imageData = [];
+
+uploader.addEventListener("click", () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.multiple = true;
+  input.onchange = (e) => handleFiles(e.target.files);
+  input.click();
+});
+
+uploader.addEventListener("dragover", e => {
+  e.preventDefault();
+  uploader.classList.add("hover");
+});
+uploader.addEventListener("dragleave", () => uploader.classList.remove("hover"));
+uploader.addEventListener("drop", e => {
+  e.preventDefault();
+  uploader.classList.remove("hover");
+  handleFiles(e.dataTransfer.files);
+});
+
+async function handleFiles(files) {
+  for (let file of files) {
+    if (!file.type.startsWith("image/")) continue;
+    const reader = new FileReader();
+    await new Promise(resolve => {
+      reader.onload = (e) => {
+        const container = document.createElement("div");
+        container.className = "img-box";
+
+        const h1Input = document.createElement("input");
+        h1Input.type = "text";
+        h1Input.placeholder = "Heading (H1, max 24 chars)";
+        h1Input.maxLength = 24;
+
+        const h4Input = document.createElement("input");
+        h4Input.type = "text";
+        h4Input.placeholder = "Subheading (H4, max 30 chars)";
+        h4Input.maxLength = 30;
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+
+        container.appendChild(h1Input);
+        container.appendChild(h4Input);
+        container.appendChild(img);
+        preview.appendChild(container);
+
+        imageData.push({ src: e.target.result, h1: h1Input, h4: h4Input });
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+function loadImage(src) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = src;
+  });
+}
+
+function getBrightnessFromCanvas(ctx, x, y, w, h) {
+  const imgData = ctx.getImageData(x, y, w, h);
+  let total = 0;
+  for (let i = 0; i < imgData.data.length; i += 4) {
+    const r = imgData.data[i];
+    const g = imgData.data[i + 1];
+    const b = imgData.data[i + 2];
+    const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+    total += brightness;
+  }
+  return total / (imgData.data.length / 4);
+}
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  let pdf;
+
+  loading.style.display = "flex";
+  countdown.innerText = "Preparing...";
+
+  let estimatedSeconds = imageData.length * 2;
+  let sec = estimatedSeconds;
+
+  const interval = setInterval(() => {
+    countdown.innerText = `⏳ Downloading in ${sec--}...`;
+    if (sec < 0) clearInterval(interval);
+  }, 1000);
+
+  const fixedPageWidth = 550;
+  const maxHeadingHeight = 80;
+  const linkText = "https://mpqp.netlify.app/";
+
+  setTimeout(async () => {
+    for (let i = 0; i < imageData.length; i++) {
+      const { src, h1, h4 } = imageData[i];
+      const img = await loadImage(src);
+
+      const scale = fixedPageWidth / img.width;
+      const scaledHeight = img.height * scale;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+
+      ctx.filter = "brightness(1.1) contrast(1.1)";
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.filter = "none";
+
+      // Brightness detection from bottom right
+      const brightness = getBrightnessFromCanvas(ctx, canvas.width - 200, canvas.height - 100, 180, 80);
+      const linkColor = brightness < 128 ? "#ffffff" : "#000000";
+
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+      const h1TextRaw = (h1.value || "").trim().slice(0, 24);
+      const h4TextRaw = (h4.value || "").trim().slice(0, 30);
+      const headingHeight = (h1TextRaw || h4TextRaw) ? maxHeadingHeight : 0;
+
+      const pageHeight = scaledHeight + headingHeight;
+
+      if (i === 0) {
+        pdf = new jsPDF({
+          orientation: pageHeight > fixedPageWidth ? "portrait" : "landscape",
+          unit: "pt",
+          format: [fixedPageWidth, pageHeight],
+        });
+      } else {
+        pdf.addPage([fixedPageWidth, pageHeight], pageHeight > fixedPageWidth ? "portrait" : "landscape");
+      }
+
+      if (headingHeight > 0) {
+        const headingWidth = fixedPageWidth * 0.8;
+        const headingX = (fixedPageWidth - headingWidth) / 2;
+
+        pdf.setFillColor("#01084c");
+        pdf.rect(headingX, 10, headingWidth, headingHeight - 20, "F");
+
+        pdf.setTextColor("#ffffff");
+        pdf.setFont("helvetica", "bold");
+
+        if (h1TextRaw) {
+          pdf.setFontSize(13);
+          const h1Lines = pdf.splitTextToSize(h1TextRaw, headingWidth - 40);
+          pdf.text(h1Lines, fixedPageWidth / 2, 35, { align: "center" });
+        }
+
+        if (h4TextRaw) {
+          pdf.setFont("helvetica", "normal");
+          pdf.setFontSize(10);
+          const h4Lines = pdf.splitTextToSize(h4TextRaw, headingWidth - 40);
+          pdf.text(h4Lines, fixedPageWidth / 2, 60, { align: "center" });
+        }
+      }
+
+      // Add image
+      pdf.addImage(imgData, "JPEG", 0, headingHeight, fixedPageWidth, scaledHeight, undefined, "FAST");
+
+      // Draw visible clickable link on image (bottom right)
+      const linkFontSize = 10;
+      const linkY = headingHeight + scaledHeight - 10;
+      const linkX = fixedPageWidth - 10;
+
+      pdf.setTextColor(linkColor);
+      pdf.setFontSize(linkFontSize);
+      pdf.setFont("helvetica", "normal");
+
+      pdf.textWithLink(linkText, linkX, linkY, {
+        url: linkText,
+        align: "right"
+      });
+    }
+
+    pdf.save("HD_Images.pdf");
+    loading.style.display = "none";
+  }, estimatedSeconds * 1000);
+}
+</script>
+
+</body>
+</html>
