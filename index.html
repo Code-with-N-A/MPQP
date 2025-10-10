@@ -51,6 +51,7 @@
   <meta name="theme-color" content="#0a0a0a">
   <meta name="msapplication-TileColor" content="#0a0a0a">
 
+  <link rel="stylesheet" href="popo.css">
   <style>
     :root {
       font-family: "Segoe UI", Roboto, Arial, sans-serif;
@@ -308,6 +309,26 @@
 </head>
 
 <body>
+    <!-- Popup overlay -->
+<div id="popup-overlay" style="display:none;">
+  <div id="popup">
+    <span class="close-btn" id="close-popup">&times;</span>
+
+    <h2>Welcome to the MPQP</h2>
+
+    <p class="clickable-text" onclick="window.open('https://forms.gle/wBN7HyPem7Yh1iv28')">Click here to upload your PDF quickly</p>
+    <div id="important-points">
+      <h3>Important Points:</h3>
+      <ul>
+        <li>Do not allow upload if paper code for the same semester and year exists.</li>
+        <li>Ensure the file is in PDF format.</li>
+        <li>Do not upload duplicate content.</li>
+        <li>Follow the website guidelines carefully.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
   <div class="navbar">
     <p>MPQP <a style="font-size: 15px; gap: 20px; color: rgb(153, 153, 227);"
         href="https://forms.gle/1szYNcwECgATXsP67">Add New Question Paper</a></p>
@@ -544,6 +565,7 @@
   </script>
 
   <script src="inspact_block.js"></script>
+  <script src="popo.js"></script>
 </body>
 
 </html>
