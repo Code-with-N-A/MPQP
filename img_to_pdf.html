@@ -361,15 +361,15 @@ async function generatePDF() {
       canvas.height = img.height;
       const ctx = canvas.getContext("2d");
 
-      ctx.filter = "brightness(1.1) contrast(1.1)";
+      ctx.filter = "brightness(1.1) contrast(1.0)";
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       ctx.filter = "none";
 
-      // Brightness detection from bottom right
       const brightness = getBrightnessFromCanvas(ctx, canvas.width - 200, canvas.height - 100, 180, 80);
       const linkColor = brightness < 128 ? "#ffffff" : "#000000";
 
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      // JPEG quality reduce to 60% for smaller PDF
+      const imgData = canvas.toDataURL("image/jpeg", 0.6);
 
       const h1TextRaw = (h1.value || "").trim().slice(0, 24);
       const h4TextRaw = (h4.value || "").trim().slice(0, 30);
@@ -411,10 +411,8 @@ async function generatePDF() {
         }
       }
 
-      // Add image
       pdf.addImage(imgData, "JPEG", 0, headingHeight, fixedPageWidth, scaledHeight, undefined, "FAST");
 
-      // Draw visible clickable link on image (bottom right)
       const linkFontSize = 10;
       const linkY = headingHeight + scaledHeight - 10;
       const linkX = fixedPageWidth - 10;
@@ -434,6 +432,7 @@ async function generatePDF() {
   }, estimatedSeconds * 1000);
 }
 </script>
+
 
 </body>
 </html>
