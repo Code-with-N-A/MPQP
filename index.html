@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="hi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Title -->
+  <title>MPQP - MP Polytechnic Question Papers All Branches</title>
+
+  <!-- Meta Description -->
+  <meta name="description"
+    content="MPQP: Download previous year question papers for MP Polytechnic and RGPV students. Access branch-wise and semester-wise exam papers, including RGPV special collections.">
+
+  <!-- Meta Keywords -->
+  <meta name="keywords"
+    content="MPQP, MP Polytechnic question papers, RGPV question papers, Polytechnic exam papers, previous year papers, branch-wise Q papers, semester-wise exam papers, RGPV special question papers, download MP Polytechnic Q papers">
+
+  <!-- Meta Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="MPQP – MP Polytechnic & RGPV Question Papers">
+  <meta property="og:description"
+    content="Download previous year question papers for MP Polytechnic and RGPV students. Branch-wise and RGPV special papers available.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mpqp.netlify/">
+  <meta property="og:image" content="https://www.yoursite.com/logo.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MPQP – MP Polytechnic & RGPV Question Papers">
+  <meta name="twitter:description"
+    content="Download previous year question papers for MP Polytechnic and RGPV students. Semester-wise and RGPV special papers included.">
+  <meta name="twitter:image" content="https://www.yoursite.com/logo.png">
+
+  <!-- Favicon for all browsers -->
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+
+  <!-- PNG favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+
+  <!-- Apple touch icon (for iOS devices) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+
+  <!-- Android icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/android-chrome-512x512.png">
+
+  <!-- Theme & tile colors -->
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="msapplication-TileColor" content="#0a0a0a">
+
+  <style>
+    :root {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      --blue: #3a4255;
+      --bg: #f6f8fb;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: #111;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--blue);
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar p {
+      font-size: 28px;
+      margin: 0 0 8px 0;
+      font-weight: bold;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .search-container {
+      position: relative;
+      flex: 1;
+      margin-left: 15px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .search-container input {
+      width: 90%;
+      padding: 10px 20px 8px 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 7px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Branch filter buttons */
+    .filters {
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filters button {
+      padding: 12px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #e2e8f0;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+
+    .filters button.active {
+      background: var(--blue);
+      color: white;
+    }
+
+    .filters button:hover {
+      background: #cbd5e1;
+    }
+
+    /* Table styling */
+    .table-container {
+      background: #ffffff;
+      margin: 15px 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #eef2f7;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #bec4c7;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    a.pdf-link {
+      color: blue;
+      text-decoration: underline;
+    }
+
+    /* Highlight search match */
+    .highlight {
+      background: #fff3b0;
+    }
+
+    /* Status and Loader */
+    #status {
+      font-size: 14px;
+      color: #666;
+      padding: 10px 20px;
+    }
+
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid blue;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .no-record {
+      text-align: center;
+      padding: 20px;
+      color: #555;
+      font-size: 15px;
+    }
+
+    /* Responsive adjustments */
+    @media(max-width:1200px) {
+      .search-container {
+        max-width: 350px;
+      }
+
+      th,
+      td {
+        font-size: 13px;
+        padding: 8px;
+      }
+    }
+
+    @media(max-width:992px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .search-container {
+        margin: 10px 0 0 0;
+      }
+
+      .filters {
+        justify-content: flex-start;
+      }
+
+      table {
+        min-width: 650px;
+      }
+    }
+
+    @media(max-width:768px) {
+
+      th,
+      td {
+        font-size: 14px;
+        padding: 6px;
+      }
+
+      .filters {
+        justify-content: center;
+        gap: 4px;
+      }
+
+      table {
+        min-width: 600px;
+      }
+    }
+
+    @media(max-width:576px) {
+      .navbar h1 {
+        font-size: 18px;
+      }
+
+      .search-container {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .filters button {
+        padding: 5px 8px;
+        font-size: 12px;
+      }
+
+      table {
+        min-width: 550px;
+        font-size: 11px;
+      }
+    }
+
+    @media(max-width:400px) {
+
+      th,
+      td {
+        font-size: 10px;
+        padding: 5px;
+      }
+
+      .filters button {
+        padding: 4px 6px;
+        font-size: 20px;
+      }
+    }
+  </style>
+
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <p>MPQP <a style="font-size: 15px; gap: 20px; color: rgb(153, 153, 227);" href="https://forms.gle/1szYNcwECgATXsP67">Add New Question Paper</a></p>
+    <div class="search-container">
+      <input id="searchBar" type="text" placeholder="Search any value...">
+      <button class="clear-btn" id="clearSearch">×</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" data-branch="All">All</button>
+    <button class="filter-btn" data-branch="CSE">CSE</button>
+    <button class="filter-btn" data-branch="ME">ME</button>
+    <button class="filter-btn" data-branch="CE">CE</button>
+    <button class="filter-btn" data-branch="EE">EE</button>
+    <button class="filter-btn" data-branch="CHE">CHE</button>
+    <button class="filter-btn" data-branch="AUTO">AUTO</button>
+  </div>
+  <div id="status"></div>
+  <div class="table-container" id="tableWrap"></div>
+
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
+    let allData = [];
+    let filteredBranch = "All";
+
+    function parseCSV(text) {
+      const rows = [], lines = text.split(/\r?\n/);
+      for (let line of lines) {
+        const cols = line.split(",").map(v => v.trim());
+        if (cols.every(c => c === "")) continue; // skip empty rows
+        rows.push(cols);
+      }
+      return rows;
+    }
+
+    function uniqueRows(rows) {
+      const seen = new Set(), unique = [];
+      for (let r of rows) {
+        const key = r.join("|");
+        if (!seen.has(key)) { seen.add(key); unique.push(r); }
+      }
+      return unique;
+    }
+
+    function highlightMatch(text, term) {
+      if (!term) return text;
+      const regex = new RegExp(`(${term})`, "gi");
+      return text.replace(regex, "<span class='highlight'>$1</span>");
+    }
+
+    function renderTable(rows, searchTerm = "") {
+      const tableWrap = document.getElementById("tableWrap");
+      tableWrap.innerHTML = "";
+      if (rows.length <= 1) {
+        tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
+        return;
+      }
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+      rows[0].forEach(h => {
+        const th = document.createElement("th");
+        th.textContent = h;
+        trh.appendChild(th);
+      });
+      thead.appendChild(trh);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        const tr = document.createElement("tr");
+        if (r.length === 0) continue;
+        r.forEach(cell => {
+          const td = document.createElement("td");
+          let val = cell || "";
+          if (/https?:\/\//.test(val)) {
+            const a = document.createElement("a");
+            a.href = val; a.target = "_blank"; a.textContent = "Open PDF";
+            a.className = "pdf-link";
+            td.appendChild(a);
+          } else {
+            td.innerHTML = highlightMatch(val, searchTerm);
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      tableWrap.appendChild(table);
+    }
+
+    async function loadSheet() {
+      const status = document.getElementById("status");
+      status.innerHTML = '<div class="loader"></div>Loading data...';
+      try {
+        const resp = await fetch(SHEET_URL);
+        const text = await resp.text();
+        let rows = parseCSV(text);
+        rows = uniqueRows(rows);
+        allData = rows;
+        renderTable(rows);
+        status.textContent = `Total number of papers available ${rows.length - 1}`;
+      } catch (err) {
+        status.textContent = "Error loading sheet.";
+        console.error(err);
+      }
+    }
+
+    function filterData(searchTerm) {
+      const term = searchTerm.trim().toLowerCase();
+      let rows = [...allData];
+      if (filteredBranch !== "All") {
+        const header = rows[0];
+        const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
+        rows = rows.filter((r, i) => i === 0 || (r[branchIndex] && r[branchIndex].toLowerCase() === filteredBranch.toLowerCase()));
+      }
+      if (term) {
+        const header = rows[0];
+        const filtered = [header];
+        for (let i = 1; i < rows.length; i++) {
+          const rowText = rows[i].join(" ").toLowerCase();
+          if (rowText.includes(term)) filtered.push(rows[i]);
+        }
+        renderTable(filtered, term);
+      } else {
+        renderTable(rows);
+      }
+    }
+
+    document.getElementById("searchBar").addEventListener("input", (e) => {
+      filterData(e.target.value);
+    });
+
+    document.getElementById("clearSearch").addEventListener("click", () => {
+      const s = document.getElementById("searchBar");
+      s.value = "";
+      renderTable(allData);
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filteredBranch = btn.dataset.branch;
+        filterData(document.getElementById("searchBar").value);
+      });
+    });
+
+    window.addEventListener("load", loadSheet);
+  </script>
+  <script src="inspact_block.js"></script>
+</body>
+
+</html>
