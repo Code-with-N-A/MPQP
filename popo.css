@@ -61,6 +61,13 @@
     line-height: 1.3;
 }
 
+.imp {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    /* important: allow items to go to next line */
+}
+
 /* Clickable text with slow blink */
 .clickable-text {
     color: #e74c3c;
@@ -68,11 +75,11 @@
     font-weight: bold;
     animation: slow-blink 2s infinite;
     margin: 0;
-    display: inline-block;
     text-decoration: underline;
     transition: color 0.3s;
     font-size: 1.1em;
 }
+
 
 .clickable-text:hover {
     color: #c0392b;
@@ -125,7 +132,7 @@
     #important-points {
         padding: 15px;
     }
-    
+
 }
 
 /* Media Queries for phones */
@@ -138,18 +145,26 @@
 
     #popup h2 {
         font-size: 1.2em;
+
+    }
+
+    .imp {
+        display: inline;
     }
 
     .clickable-text {
+        display: flex;
         font-size: 0.95em;
+        margin-top: 10px;
     }
 
     #important-points {
         padding: 12px;
     }
+
     #important-points li {
-    margin: 10px 0;
-    line-height: 1.6;
-    font-size: 0.6em;
-}
+        margin: 10px 0;
+        line-height: 1.6;
+        font-size: 0.6em;
+    }
 }

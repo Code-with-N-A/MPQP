@@ -116,38 +116,6 @@
       cursor: pointer;
     }
 
-    /* Branch filter buttons */
-    .filters {
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      background: var(--bg);
-      position: sticky;
-      /* Fixed filter buttons */
-      top: 60px;
-      /* Offset from navbar */
-      z-index: 999;
-    }
-
-    .filters button {
-      padding: 12px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #e2e8f0;
-      cursor: pointer;
-      transition: 0.3s;
-      white-space: nowrap;
-    }
-
-    .filters button.active {
-      background: var(--blue);
-      color: white;
-    }
-
-    .filters button:hover {
-      background: #cbd5e1;
-    }
 
     /* Table styling */
     .table-container {
@@ -243,26 +211,19 @@
         margin: 10px 0 0 0;
       }
 
-      .filters {
-        justify-content: flex-start;
-      }
-
       table {
         min-width: 650px;
       }
     }
 
     @media(max-width:768px) {
+
       th,
       td {
         font-size: 14px;
         padding: 6px;
       }
 
-      .filters {
-        justify-content: center;
-        gap: 4px;
-      }
 
       table {
         min-width: 600px;
@@ -279,10 +240,6 @@
         width: 100%;
       }
 
-      .filters button {
-        padding: 5px 8px;
-        font-size: 12px;
-      }
 
       table {
         min-width: 550px;
@@ -298,12 +255,97 @@
         padding: 5px;
       }
 
-      .filters button {
-        padding: 4px 6px;
-        font-size: 10px;
-      }
-       table {
+
+      table {
         min-width: 650px;
+      }
+    }
+
+
+
+    /* Parent filters div center alignment */
+    .filters {
+      display: flex;
+      justify-content: center;
+      /* center horizontally */
+      flex-wrap: nowrap;
+      /* no wrap, always 1 row */
+      gap: 12px;
+      padding: 10px 20px;
+      background: var(--bg);
+      position: sticky;
+      top: 60px;
+      z-index: 999;
+    }
+
+    .dropdown {
+      display: inline-block;
+      text-align: center;
+      flex: 1 1 0;
+      /* equal width for all */
+      min-width: 0;
+      /* allow shrinking */
+      position: relative;
+    }
+
+    .dropbtn {
+      background: #e2e8f0;
+      color: #111;
+      padding: 10px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      /* fill dropdown container width */
+      text-align: center;
+    }
+
+    .dropbtn.active {
+      background: var(--blue);
+      color: white;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #ffffff;
+      width: 100%;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      z-index: 1000;
+      margin-top: 4px;
+      text-align: left;
+    }
+
+    .dropdown-content button {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .dropdown-content button:hover {
+      background: #cbd5e1;
+    }
+
+    /* Responsive adjustments for small screens */
+    @media (max-width: 576px) {
+      .filters {
+        gap: 6px;
+      }
+
+      .dropbtn {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .dropdown-content button {
+        font-size: 12px;
+        padding: 6px 10px;
       }
     }
   </style>
@@ -316,12 +358,13 @@
   <div id="popup-overlay" style="display:none;">
     <div id="popup">
       <span class="close-btn" id="close-popup">&times;</span>
-
       <h2>Welcome to the MPQP</h2>
 
-      <p class="clickable-text" onclick="window.open('https://forms.gle/wBN7HyPem7Yh1iv28')">Click here to upload your
-        PDF quickly <span style="color: #111;">||</span></p>
-      <p style="color: blue;" class="clickable-text" onclick="window.open('img_to_pdf.html')">Img To Pdf Converter</p>
+      <div class="imp">
+        <p class="clickable-text" onclick="window.open('https://forms.gle/wBN7HyPem7Yh1iv28')">Click here to upload your
+          PDF quickly</p>
+        <p style="color: blue;" class="clickable-text" onclick="window.open('img_to_pdf.html')">Img To Pdf Converter</p>
+      </div>
       <div id="important-points">
         <h3>Important Points:</h3>
         <ul>
@@ -343,249 +386,256 @@
     </div>
   </div>
 
+  <!-- Replace each filter div with dropdown structure -->
   <div class="filters">
-    <button class="filter-btn active" data-branch="All">All</button>
-    <button class="filter-btn" data-branch="CSE">CSE</button>
-    <button class="filter-btn" data-branch="ME">ME</button>
-    <button class="filter-btn" data-branch="CE">CE</button>
-    <button class="filter-btn" data-branch="EE">EE</button>
-    <button class="filter-btn" data-branch="CHE">CHE</button>
-    <button class="filter-btn" data-branch="AUTO">AUTO</button>
+    <div class="dropdown">
+      <button class="dropbtn">Branch: All ▼</button>
+      <div class="dropdown-content">
+        <button class="filter-btn active" data-branch="All">All</button>
+        <button class="filter-btn" data-branch="CSE">CSE</button>
+        <button class="filter-btn" data-branch="ME">ME</button>
+        <button class="filter-btn" data-branch="CE">CE</button>
+        <button class="filter-btn" data-branch="EE">EE</button>
+        <button class="filter-btn" data-branch="CHE">CHE</button>
+        <button class="filter-btn" data-branch="AUTO">AUTO</button>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn">Year: All ▼</button>
+      <div class="dropdown-content">
+        <button class="year-btn active" data-year="All">All Years</button>
+        <button class="year-btn" data-year="2024">2024</button>
+        <button class="year-btn" data-year="2025">2025</button>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn">Semester: All ▼</button>
+      <div class="dropdown-content">
+        <button class="semester-btn active" data-semester="All">All Semesters</button>
+        <button class="semester-btn" data-semester="1">Semester 1</button>
+        <button class="semester-btn" data-semester="2">Semester 2</button>
+        <button class="semester-btn" data-semester="3">Semester 3</button>
+        <button class="semester-btn" data-semester="4">Semester 4</button>
+        <button class="semester-btn" data-semester="5">Semester 5</button>
+        <button class="semester-btn" data-semester="6">Semester 6</button>
+      </div>
+    </div>
   </div>
-  <div class="filters">
-    <button class="year-btn active" data-year="All">All Years</button>
-    <button class="year-btn" data-year="2024">2024</button>
-    <button class="year-btn" data-year="2025">2025</button>
-  </div>
+
   <div id="status"></div>
   <div class="table-container" id="tableWrap"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
   <script>
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
 
-let allData = [];
-let filteredBranch = "All";
-let filteredYear = "All";
-let debounceTimer = null;
+    let allData = [];
+    let filteredBranch = "All";
+    let filteredYear = "All";
+    let filteredSemester = "All";
+    let debounceTimer = null;
 
-// CSV Parse
-function parseCSV(text) {
-  const rows = [], lines = text.split(/\r?\n/);
-  for (let line of lines) {
-    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-    if (cols.every(c => c === "")) continue;
-    rows.push(cols);
-  }
-  return rows;
-}
+    // CSV Parse
+    function parseCSV(text) {
+      const rows = [], lines = text.split(/\r?\n/);
+      for (let line of lines) {
+        const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+        if (cols.every(c => c === "")) continue;
+        rows.push(cols);
+      }
+      return rows;
+    }
 
-// Remove duplicates
-function uniqueRows(rows) {
-  const seen = new Set(), unique = [];
-  for (let r of rows) {
-    const key = r.join("|").toLowerCase();
-    if (!seen.has(key)) { seen.add(key); unique.push(r); }
-  }
-  return unique;
-}
+    // Remove duplicates
+    function uniqueRows(rows) {
+      const seen = new Set(), unique = [];
+      for (let r of rows) {
+        const key = r.join("|").toLowerCase();
+        if (!seen.has(key)) { seen.add(key); unique.push(r); }
+      }
+      return unique;
+    }
 
-// Normalize text
-function normalizeText(text) {
-  return (text || "").toLowerCase().replace(/[-\/\\]/g, " ").replace(/\s+/g, " ").trim();
-}
+    // Normalize text
+    function normalizeText(text) {
+      return (text || "").toLowerCase().replace(/[-\/\\]/g, " ").replace(/\s+/g, " ").trim();
+    }
 
-// Capitalize first letter
-function capitalizeWords(text) {
-  return (text || "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
-}
+    // Capitalize words
+    function capitalizeWords(text) {
+      return (text || "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+    }
 
-// Highlight search
-function highlightMatch(text, term) {
-  if (!term) return capitalizeWords(text);
-  const regex = new RegExp(`(${term})`, "gi");
-  return capitalizeWords(text).replace(regex, "<span class='highlight'>$1</span>");
-}
+    // Highlight search match
+    function highlightMatch(text, term) {
+      if (!term) return capitalizeWords(text);
+      const safeText = capitalizeWords(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`(${term})`, "gi");
+      return capitalizeWords(text).replace(regex, "<span class='highlight'>$1</span>");
+    }
 
-// Download PDF (mobile compatible)
-function downloadPDF(url, filename) {
-  const driveUrl = url.includes("/open?id=") 
-    ? url.replace("/open?id=", "/uc?export=download&id=") 
-    : url.includes("/file/d/") 
-      ? `https://drive.google.com/uc?export=download&id=${url.match(/[-\w]{25,}/)[0]}` 
-      : url;
+    // Render table
+    function renderTable(rows, searchTerm = "") {
+      const tableWrap = document.getElementById("tableWrap");
+      tableWrap.innerHTML = "";
 
-  fetch(driveUrl)
-    .then(resp => resp.blob())
-    .then(blob => {
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    })
-    .catch(() => {
-      window.open(url, "_blank"); // fallback
-    });
-}
-
-// Render table
-function renderTable(rows, searchTerm = "") {
-  const tableWrap = document.getElementById("tableWrap");
-  tableWrap.innerHTML = "";
-
-  if (rows.length <= 1) {
-    tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
-    return;
-  }
-
-  const table = document.createElement("table");
-  const thead = document.createElement("thead");
-  const trh = document.createElement("tr");
-
-  const header = rows[0].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
-  header.forEach(h => {
-    const th = document.createElement("th");
-    th.textContent = capitalizeWords(h);
-    trh.appendChild(th);
-  });
-  thead.appendChild(trh);
-  table.appendChild(thead);
-
-  const tbody = document.createElement("tbody");
-  for (let i = 1; i < rows.length; i++) {
-    const r = rows[i].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
-    const tr = document.createElement("tr");
-
-    r.forEach(cell => {
-      const td = document.createElement("td");
-      const val = cell || "";
-
-      if (/https?:\/\//.test(val)) {
-        const fileIdMatch = val.match(/[-\w]{25,}/);
-        const fileId = fileIdMatch ? fileIdMatch[0] : null;
-
-        if (fileId) {
-          const openUrl = `https://drive.google.com/file/d/${fileId}/view`;
-          const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-
-          const openBtn = document.createElement("a");
-          openBtn.href = openUrl;
-          openBtn.target = "_blank";
-          openBtn.textContent = "Open";
-          openBtn.className = "pdf-open";
-
-          const downloadBtn = document.createElement("button");
-          downloadBtn.textContent = "Download";
-          downloadBtn.className = "pdf-download";
-          downloadBtn.onclick = () => downloadPDF(downloadUrl, "Paper.pdf");
-
-          td.appendChild(openBtn);
-          td.appendChild(document.createTextNode(" | "));
-          td.appendChild(downloadBtn);
-        }
-      } else {
-        td.innerHTML = highlightMatch(val, normalizeText(searchTerm));
+      if (rows.length <= 1) {
+        tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
+        return;
       }
 
-      tr.appendChild(td);
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+
+      const header = rows[0].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
+      header.forEach(h => {
+        const th = document.createElement("th");
+        th.textContent = capitalizeWords(h);
+        trh.appendChild(th);
+      });
+      thead.appendChild(trh);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
+        const tr = document.createElement("tr");
+
+        r.forEach(cell => {
+          const td = document.createElement("td");
+          const val = cell || "";
+          if (/https?:\/\//.test(val)) {
+            const fileId = val.match(/[-\w]{25,}/);
+            if (fileId) {
+              const openUrl = `https://drive.google.com/file/d/${fileId[0]}/view`;
+              const openBtn = document.createElement("a");
+              openBtn.href = openUrl;
+              openBtn.target = "_blank";
+              openBtn.textContent = "Open PDF";
+              openBtn.className = "pdf-open";
+              td.appendChild(openBtn);
+            }
+          } else {
+            td.innerHTML = highlightMatch(val, normalizeText(searchTerm));
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+
+      table.appendChild(tbody);
+      tableWrap.appendChild(table);
+    }
+
+    // Load Sheet
+    async function loadSheet() {
+      const status = document.getElementById("status");
+      status.innerHTML = '<div class="loader"></div>Loading data...';
+      try {
+        const resp = await fetch(SHEET_URL);
+        const text = await resp.text();
+        let rows = parseCSV(text);
+        rows = uniqueRows(rows);
+        allData = rows;
+        renderTable(rows);
+        status.textContent = `Total number of papers available: ${rows.length - 1}`;
+      } catch (err) {
+        status.textContent = "Error loading sheet.";
+        console.error(err);
+      }
+    }
+
+    // Filter function
+    function filterData(searchTerm = "") {
+      const term = normalizeText(searchTerm);
+      let rows = [...allData];
+
+      const header = rows[0];
+      const branchIndex = header.findIndex(h => /Branch/i.test(h));
+      const yearIndex = header.findIndex(h => /Year/i.test(h));
+      const semIndex = header.findIndex(h => /Semester/i.test(h));
+
+      // Branch filter
+      if (filteredBranch !== "All") {
+        rows = rows.filter((r, i) => i === 0 || (r[branchIndex] && normalizeText(r[branchIndex]) === normalizeText(filteredBranch)));
+      }
+
+      // Year filter
+      if (filteredYear !== "All") {
+        rows = rows.filter((r, i) => i === 0 || (r[yearIndex] && normalizeText(r[yearIndex]) === normalizeText(filteredYear)));
+      }
+
+      // Semester filter
+      if (filteredSemester !== "All") {
+        rows = rows.filter((r, i) => {
+          if (i === 0) return true;
+          const semCell = r[semIndex] || "";
+          return semCell.includes(filteredSemester); // includes logic
+        });
+      }
+
+      // Search filter
+      if (!term) { renderTable(rows); return; }
+      const filtered = [header];
+      const searchIndexes = header.map((h, idx) => !/Timestamp/i.test(h) ? idx : -1).filter(idx => idx !== -1);
+      for (let i = 1; i < rows.length; i++) {
+        const rowText = searchIndexes.map(idx => normalizeText(rows[i][idx])).join(" ");
+        if (rowText.includes(term)) filtered.push(rows[i]);
+      }
+      renderTable(filtered, searchTerm);
+    }
+
+    // Search bar
+    document.getElementById("searchBar")?.addEventListener("input", e => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => filterData(e.target.value), 500);
     });
 
-    tbody.appendChild(tr);
-  }
+    document.getElementById("clearSearch")?.addEventListener("click", () => {
+      document.getElementById("searchBar").value = "";
+      filterData();
+    });
 
-  table.appendChild(tbody);
-  tableWrap.appendChild(table);
-}
+    // Branch buttons
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filteredBranch = btn.dataset.branch;
+        filterData(document.getElementById("searchBar")?.value || "");
+      });
+    });
 
-// Load CSV
-async function loadSheet() {
-  const status = document.getElementById("status");
-  status.innerHTML = '<div class="loader"></div>Loading data...';
-  try {
-    const resp = await fetch(SHEET_URL);
-    const text = await resp.text();
-    let rows = parseCSV(text);
-    rows = uniqueRows(rows);
-    allData = rows;
-    renderTable(rows);
-    status.textContent = `Total papers available: ${rows.length - 1}`;
-  } catch (err) {
-    status.textContent = "Error loading sheet.";
-    console.error(err);
-  }
-}
+    // Year buttons
+    document.querySelectorAll(".year-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filteredYear = btn.dataset.year;
+        filterData(document.getElementById("searchBar")?.value || "");
+      });
+    });
 
-// Filter & Search
-function filterData(searchTerm) {
-  const term = normalizeText(searchTerm);
-  let rows = [...allData];
+    // Semester buttons
+    document.querySelectorAll(".semester-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".semester-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filteredSemester = btn.dataset.semester;
+        filterData(document.getElementById("searchBar")?.value || "");
+      });
+    });
 
-  const header = rows[0];
-  const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
-  const yearIndex = header.findIndex(h => /Year/i.test(h));
-
-  if (filteredBranch !== "All") {
-    rows = rows.filter((r, i) => i === 0 || (r[branchIndex] && normalizeText(r[branchIndex]) === normalizeText(filteredBranch)));
-  }
-  if (filteredYear !== "All") {
-    rows = rows.filter((r, i) => i === 0 || (r[yearIndex] && normalizeText(r[yearIndex]) === normalizeText(filteredYear)));
-  }
-
-  if (!term) { renderTable(rows); return; }
-
-  const filtered = [header];
-  const searchIndexes = header.map((h, idx) => !/Timestamp/i.test(h) ? idx : -1).filter(idx => idx !== -1);
-
-  for (let i = 1; i < rows.length; i++) {
-    const rowText = searchIndexes.map(idx => normalizeText(rows[i][idx])).join(" ");
-    if (rowText.includes(term)) filtered.push(rows[i]);
-  }
-
-  renderTable(filtered, searchTerm);
-}
-
-// Debounce search
-document.getElementById("searchBar").addEventListener("input", e => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => filterData(e.target.value), 500);
-});
-
-// Clear search
-document.getElementById("clearSearch").addEventListener("click", () => {
-  document.getElementById("searchBar").value = "";
-  renderTable(allData);
-});
-
-// Branch filter
-document.querySelectorAll(".filter-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    filteredBranch = btn.dataset.branch;
-    filterData(document.getElementById("searchBar").value);
-  });
-});
-
-// Year filter
-document.querySelectorAll(".year-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    filteredYear = btn.dataset.year;
-    filterData(document.getElementById("searchBar").value);
-  });
-});
-
-// Load on page load
-window.addEventListener("load", loadSheet);
-</script>
+    // Initialize
+    window.addEventListener("load", loadSheet);
+  </script>
 
 
   <script src="inspact_block.js"></script>
   <script src="popo.js"></script>
+  <script src="dropdown.js"></script>
 </body>
 
 </html>
