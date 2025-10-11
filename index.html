@@ -360,209 +360,228 @@
   <div id="status"></div>
   <div class="table-container" id="tableWrap"></div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
   <script>
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
 
-    let allData = [];
-    let filteredBranch = "All";
-    let filteredYear = "All";
-    let debounceTimer = null;
+let allData = [];
+let filteredBranch = "All";
+let filteredYear = "All";
+let debounceTimer = null;
 
-    // CSV Parse Function
-    function parseCSV(text) {
-      const rows = [], lines = text.split(/\r?\n/);
-      for (let line of lines) {
-        const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-        if (cols.every(c => c === "")) continue;
-        rows.push(cols);
-      }
-      return rows;
-    }
+// CSV Parse
+function parseCSV(text) {
+  const rows = [], lines = text.split(/\r?\n/);
+  for (let line of lines) {
+    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+    if (cols.every(c => c === "")) continue;
+    rows.push(cols);
+  }
+  return rows;
+}
 
-    // Remove duplicate rows
-    function uniqueRows(rows) {
-      const seen = new Set(), unique = [];
-      for (let r of rows) {
-        const key = r.join("|").toLowerCase();
-        if (!seen.has(key)) { seen.add(key); unique.push(r); }
-      }
-      return unique;
-    }
+// Remove duplicates
+function uniqueRows(rows) {
+  const seen = new Set(), unique = [];
+  for (let r of rows) {
+    const key = r.join("|").toLowerCase();
+    if (!seen.has(key)) { seen.add(key); unique.push(r); }
+  }
+  return unique;
+}
 
-    // Normalize text for search
-    function normalizeText(text) {
-      return (text || "").toLowerCase().replace(/[-\/\\]/g, " ").replace(/\s+/g, " ").trim();
-    }
+// Normalize text
+function normalizeText(text) {
+  return (text || "").toLowerCase().replace(/[-\/\\]/g, " ").replace(/\s+/g, " ").trim();
+}
 
-    // Capitalize text (First letter uppercase, rest lowercase)
-    function capitalizeWords(text) {
-      return (text || "")
-        .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(" ");
-    }
+// Capitalize first letter
+function capitalizeWords(text) {
+  return (text || "").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+}
 
-    // Highlight search match
-    function highlightMatch(text, term) {
-      if (!term) return capitalizeWords(text);
-      const safeText = capitalizeWords(text).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // escape regex
-      const regex = new RegExp(`(${term})`, "gi");
-      return capitalizeWords(text).replace(regex, "<span class='highlight'>$1</span>");
-    }
+// Highlight search
+function highlightMatch(text, term) {
+  if (!term) return capitalizeWords(text);
+  const regex = new RegExp(`(${term})`, "gi");
+  return capitalizeWords(text).replace(regex, "<span class='highlight'>$1</span>");
+}
 
-    // Render table
-    function renderTable(rows, searchTerm = "") {
-      const tableWrap = document.getElementById("tableWrap");
-      tableWrap.innerHTML = "";
+// Download PDF (mobile compatible)
+function downloadPDF(url, filename) {
+  const driveUrl = url.includes("/open?id=") 
+    ? url.replace("/open?id=", "/uc?export=download&id=") 
+    : url.includes("/file/d/") 
+      ? `https://drive.google.com/uc?export=download&id=${url.match(/[-\w]{25,}/)[0]}` 
+      : url;
 
-      if (rows.length <= 1) {
-        tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
-        return;
-      }
+  fetch(driveUrl)
+    .then(resp => resp.blob())
+    .then(blob => {
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    })
+    .catch(() => {
+      window.open(url, "_blank"); // fallback
+    });
+}
 
-      const table = document.createElement("table");
-      const thead = document.createElement("thead");
-      const trh = document.createElement("tr");
+// Render table
+function renderTable(rows, searchTerm = "") {
+  const tableWrap = document.getElementById("tableWrap");
+  tableWrap.innerHTML = "";
 
-      const header = rows[0].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
-      header.forEach(h => {
-        const th = document.createElement("th");
-        th.textContent = capitalizeWords(h);
-        trh.appendChild(th);
-      });
-      thead.appendChild(trh);
-      table.appendChild(thead);
+  if (rows.length <= 1) {
+    tableWrap.innerHTML = `<div class="no-record">No record found</div>`;
+    return;
+  }
 
-      const tbody = document.createElement("tbody");
-      for (let i = 1; i < rows.length; i++) {
-        const r = rows[i].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
-        const tr = document.createElement("tr");
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const trh = document.createElement("tr");
 
-        r.forEach(cell => {
-          const td = document.createElement("td");
-          const val = cell || "";
+  const header = rows[0].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
+  header.forEach(h => {
+    const th = document.createElement("th");
+    th.textContent = capitalizeWords(h);
+    trh.appendChild(th);
+  });
+  thead.appendChild(trh);
+  table.appendChild(thead);
 
-          // If PDF link found
-          if (/https?:\/\//.test(val)) {
-            const fileId = val.match(/[-\w]{25,}/);
-            if (fileId) {
-              const openUrl = `https://drive.google.com/file/d/${fileId[0]}/view`;
-              const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId[0]}`;
+  const tbody = document.createElement("tbody");
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i].filter((_, idx) => !/Timestamp/i.test(rows[0][idx]));
+    const tr = document.createElement("tr");
 
-              const openBtn = document.createElement("a");
-              openBtn.href = openUrl;
-              openBtn.target = "_blank";
-              openBtn.textContent = "Open";
-              openBtn.className = "pdf-open";
+    r.forEach(cell => {
+      const td = document.createElement("td");
+      const val = cell || "";
 
-              const downloadBtn = document.createElement("a");
-              downloadBtn.href = downloadUrl;
-              downloadBtn.textContent = "Download";
-              downloadBtn.className = "pdf-download";
-              downloadBtn.download = "Paper.pdf";
+      if (/https?:\/\//.test(val)) {
+        const fileIdMatch = val.match(/[-\w]{25,}/);
+        const fileId = fileIdMatch ? fileIdMatch[0] : null;
 
-              td.appendChild(openBtn);
-              td.appendChild(document.createTextNode(" | "));
-              td.appendChild(downloadBtn);
-            }
-          } else {
-            td.innerHTML = highlightMatch(val, normalizeText(searchTerm));
-          }
+        if (fileId) {
+          const openUrl = `https://drive.google.com/file/d/${fileId}/view`;
+          const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
 
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      }
+          const openBtn = document.createElement("a");
+          openBtn.href = openUrl;
+          openBtn.target = "_blank";
+          openBtn.textContent = "Open";
+          openBtn.className = "pdf-open";
 
-      table.appendChild(tbody);
-      tableWrap.appendChild(table);
-    }
+          const downloadBtn = document.createElement("button");
+          downloadBtn.textContent = "Download";
+          downloadBtn.className = "pdf-download";
+          downloadBtn.onclick = () => downloadPDF(downloadUrl, "Paper.pdf");
 
-    // Load sheet data
-    async function loadSheet() {
-      const status = document.getElementById("status");
-      status.innerHTML = '<div class="loader"></div>Loading data...';
-      try {
-        const resp = await fetch(SHEET_URL);
-        const text = await resp.text();
-        let rows = parseCSV(text);
-        rows = uniqueRows(rows);
-        allData = rows;
-        renderTable(rows);
-        status.textContent = `Total number of papers available: ${rows.length - 1}`;
-      } catch (err) {
-        status.textContent = "Error loading sheet.";
-        console.error(err);
-      }
-    }
-
-    // Filter & Search Logic
-    function filterData(searchTerm) {
-      const term = normalizeText(searchTerm);
-      let rows = [...allData];
-
-      const header = rows[0];
-      const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
-      const yearIndex = header.findIndex(h => /Year/i.test(h));
-
-      if (filteredBranch !== "All") {
-        rows = rows.filter((r, i) => i === 0 ||
-          (r[branchIndex] && normalizeText(r[branchIndex]) === normalizeText(filteredBranch)));
+          td.appendChild(openBtn);
+          td.appendChild(document.createTextNode(" | "));
+          td.appendChild(downloadBtn);
+        }
+      } else {
+        td.innerHTML = highlightMatch(val, normalizeText(searchTerm));
       }
 
-      if (filteredYear !== "All") {
-        rows = rows.filter((r, i) => i === 0 ||
-          (r[yearIndex] && normalizeText(r[yearIndex]) === normalizeText(filteredYear)));
-      }
-
-      if (!term) { renderTable(rows); return; }
-
-      const filtered = [header];
-      const searchIndexes = header.map((h, idx) => !/Timestamp/i.test(h) ? idx : -1).filter(idx => idx !== -1);
-
-      for (let i = 1; i < rows.length; i++) {
-        const rowText = searchIndexes.map(idx => normalizeText(rows[i][idx])).join(" ");
-        if (rowText.includes(term)) filtered.push(rows[i]);
-      }
-
-      renderTable(filtered, searchTerm);
-    }
-
-    // Debounce Search
-    document.getElementById("searchBar").addEventListener("input", e => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => filterData(e.target.value), 500);
+      tr.appendChild(td);
     });
 
-    // Clear Search
-    document.getElementById("clearSearch").addEventListener("click", () => {
-      document.getElementById("searchBar").value = "";
-      renderTable(allData);
-    });
+    tbody.appendChild(tr);
+  }
 
-    // Branch Filter
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        filteredBranch = btn.dataset.branch;
-        filterData(document.getElementById("searchBar").value);
-      });
-    });
+  table.appendChild(tbody);
+  tableWrap.appendChild(table);
+}
 
-    // Year Filter
-    document.querySelectorAll(".year-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        filteredYear = btn.dataset.year;
-        filterData(document.getElementById("searchBar").value);
-      });
-    });
+// Load CSV
+async function loadSheet() {
+  const status = document.getElementById("status");
+  status.innerHTML = '<div class="loader"></div>Loading data...';
+  try {
+    const resp = await fetch(SHEET_URL);
+    const text = await resp.text();
+    let rows = parseCSV(text);
+    rows = uniqueRows(rows);
+    allData = rows;
+    renderTable(rows);
+    status.textContent = `Total papers available: ${rows.length - 1}`;
+  } catch (err) {
+    status.textContent = "Error loading sheet.";
+    console.error(err);
+  }
+}
 
-    // Initialize on page load
-    window.addEventListener("load", loadSheet);
-  </script>
+// Filter & Search
+function filterData(searchTerm) {
+  const term = normalizeText(searchTerm);
+  let rows = [...allData];
+
+  const header = rows[0];
+  const branchIndex = header.findIndex(h => /Branch Name/i.test(h));
+  const yearIndex = header.findIndex(h => /Year/i.test(h));
+
+  if (filteredBranch !== "All") {
+    rows = rows.filter((r, i) => i === 0 || (r[branchIndex] && normalizeText(r[branchIndex]) === normalizeText(filteredBranch)));
+  }
+  if (filteredYear !== "All") {
+    rows = rows.filter((r, i) => i === 0 || (r[yearIndex] && normalizeText(r[yearIndex]) === normalizeText(filteredYear)));
+  }
+
+  if (!term) { renderTable(rows); return; }
+
+  const filtered = [header];
+  const searchIndexes = header.map((h, idx) => !/Timestamp/i.test(h) ? idx : -1).filter(idx => idx !== -1);
+
+  for (let i = 1; i < rows.length; i++) {
+    const rowText = searchIndexes.map(idx => normalizeText(rows[i][idx])).join(" ");
+    if (rowText.includes(term)) filtered.push(rows[i]);
+  }
+
+  renderTable(filtered, searchTerm);
+}
+
+// Debounce search
+document.getElementById("searchBar").addEventListener("input", e => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => filterData(e.target.value), 500);
+});
+
+// Clear search
+document.getElementById("clearSearch").addEventListener("click", () => {
+  document.getElementById("searchBar").value = "";
+  renderTable(allData);
+});
+
+// Branch filter
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filteredBranch = btn.dataset.branch;
+    filterData(document.getElementById("searchBar").value);
+  });
+});
+
+// Year filter
+document.querySelectorAll(".year-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".year-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filteredYear = btn.dataset.year;
+    filterData(document.getElementById("searchBar").value);
+  });
+});
+
+// Load on page load
+window.addEventListener("load", loadSheet);
+</script>
 
 
   <script src="inspact_block.js"></script>
