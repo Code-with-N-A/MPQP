@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <!-- Title -->
   <title>MPQP - MP Polytechnic Question Papers All Branches</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Meta Description -->
   <meta name="description"
@@ -33,22 +35,23 @@
     content="Download previous year question papers for MP Polytechnic and RGPV students. Semester-wise and RGPV special papers included.">
   <meta name="twitter:image" content="https://www.yoursite.com/logo.png">
 
-   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?v=2">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?v=2">
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?v=2">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?v=2">
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico?v=2">
 
-    <!-- Apple Touch Icon (iOS) -->
-    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=2">
+  <!-- Apple Touch Icon (iOS) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=2">
 
-    <!-- Android / Chrome -->
-    <link rel="icon" type="image/png" sizes="192x192" href="img/android-chrome-192x192.png?v=2">
-    <link rel="icon" type="image/png" sizes="512x512" href="img/android-chrome-512x512.png?v=2">
+  <!-- Android / Chrome -->
+  <link rel="icon" type="image/png" sizes="192x192" href="img/android-chrome-192x192.png?v=2">
+  <link rel="icon" type="image/png" sizes="512x512" href="img/android-chrome-512x512.png?v=2">
 
-    <!-- Microsoft Tile -->
-    <meta name="msapplication-TileImage" content="img/android-chrome-192x192.png?v=2">
-    <meta name="msapplication-TileColor" content="#0a122a">
+  <!-- Microsoft Tile -->
+  <meta name="msapplication-TileImage" content="img/android-chrome-192x192.png?v=2">
+  <meta name="msapplication-TileColor" content="#0a122a">
 
   <link rel="stylesheet" href="popo.css">
+  <link rel="stylesheet" href="whatsap.css">
   <style>
     :root {
       font-family: "Segoe UI", Roboto, Arial, sans-serif;
@@ -358,25 +361,37 @@
       <h2>Welcome to the MPQP</h2>
 
       <div class="imp">
-        <p class="clickable-text" onclick="window.open('https://forms.gle/wBN7HyPem7Yh1iv28')">Click here to upload your
-          PDF quickly</p>
+        <a href="https://wa.me/919303546247?text=Hi%2C%20please%20create%20PDF%20from%20my%20image%20on%20https%3A%2F%2Fmpqp.netlify.app%2Fimg_to_pdf.html%20and%20send%20it%20with%20paper%2C%20code%20or%20subject%20name."
+          target="_blank" class="whatsapp">
+          <p class="clickable-text" style="color: green;">Upload PDF via WhatsApp</p>
+        </a>
+
+        <!-- Gmail -->
+        <a href="mailto:codewithna73@gmail.com?subject=PDF%20Request&body=Hi,%20please%20create%20PDF%20from%20my%20image%20on%20https://mpqp.netlify.app/img_to_pdf.html%20and%20send%20it%20with%20paper,%20code%20or%20subject%20name."
+          target="_blank" class="gmail">
+          <p class="clickable-text">Upload PDF via Email</p>
+        </a>
         <p style="color: blue;" class="clickable-text" onclick="window.open('img_to_pdf.html')">Img To Pdf Converter</p>
       </div>
       <div id="important-points">
         <h3>Important Points:</h3>
         <ul>
-          <li>Do not allow upload if paper code for the same semester and year exists.</li>
-          <li>Ensure the file is in PDF format.</li>
-          <li>Do not upload duplicate content.</li>
-          <li>Follow the website guidelines carefully.</li>
+          <li>Click on the WhatsApp button to send your PDF directly via WhatsApp.</li>
+          <li>Click on the Email button to send your PDF via Gmail with subject and message prefilled.</li>
+          <li>Make sure your PDF is ready and contains the correct paper, code, or subject name.</li>
+          <li>Ensure the PDF is created using the <a href="https://mpqp.netlify.app/img_to_pdf.html" target="_blank">img
+              to PDF</a> tool on the website.</li>
         </ul>
+
       </div>
+
     </div>
   </div>
 
   <div class="navbar">
-    <p>MPQP <a style="font-size: 15px; gap: 20px; color: rgb(153, 153, 227);"
-        href="https://forms.gle/1szYNcwECgATXsP67">Add New Question Paper</a></p>
+    <p>MPQP <a style="font-size: 18px;color: rgb(71, 120, 236);"
+        href="https://wa.me/919303546247?text=Hi%2C%20please%20create%20PDF%20from%20my%20image%20on%20https%3A%2F%2Fmpqp.netlify.app%2Fimg_to_pdf.html%20and%20send%20it%20with%20paper%2C%20code%20or%20subject%20name."
+        target="_blank" class="whatsapp">Add New Question Paper</a></p>
     <div class="search-container">
       <input id="searchBar" type="text" placeholder="Search...">
       <button class="clear-btn" id="clearSearch">×</button>
@@ -423,6 +438,26 @@
 
   <div id="status"></div>
   <div class="table-container" id="tableWrap"></div>
+
+  <!-- Social Icons (WhatsApp & Gmail only) -->
+  <div class="social-icons" data-aos="zoom-in">
+    <i class="fas fa-globe main-icon"></i>
+
+    <div class="items">
+      <!-- WhatsApp -->
+      <a href="https://wa.me/919303546247?text=Hi%2C%20please%20create%20PDF%20from%20my%20image%20on%20https%3A%2F%2Fmpqp.netlify.app%2Fimg_to_pdf.html%20and%20send%20it%20with%20paper%2C%20code%20or%20subject%20name."
+        target="_blank" class="whatsapp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+
+      <!-- Gmail -->
+      <a href="mailto:codewithna73@gmail.com?subject=PDF%20Request&body=Hi,%20please%20create%20PDF%20from%20my%20image%20on%20https://mpqp.netlify.app/img_to_pdf.html%20and%20send%20it%20with%20paper,%20code%20or%20subject%20name."
+        target="_blank" class="gmail">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </div>
+  </div>
+
 
   <script>
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/18LqUrBwlFB0Nn7k1pUIyPdUIo7ZLfXBtY67yq97D3VU/export?format=csv&gid=2057061745";
@@ -633,6 +668,7 @@
   <script src="inspact_block.js"></script>
   <script src="popo.js"></script>
   <script src="dropdown.js"></script>
+  <script src="whatsap.js"></script>
 </body>
 
 </html>

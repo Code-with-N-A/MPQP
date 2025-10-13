@@ -1,0 +1,110 @@
+/* ===========================
+   MAIN CONTAINER (Responsive)
+=========================== */
+.social-icons {
+  position: fixed;
+  right: clamp(10px, 2vw, 20px); /* auto adjust right space */
+  bottom: calc(clamp(15px, 4vh, 50px) + env(safe-area-inset-bottom, 0px)); /* iPhone safe-area support */
+  background-color: #333;
+  color: white;
+  font-size: clamp(20px, 3vw, 28px); /* responsive icon size */
+  padding: clamp(10px, 2.5vw, 15px);
+  border-radius: 50%;
+  z-index: 9999;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: pulse 2s infinite;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.5); }
+  70% { box-shadow: 0 0 0 20px rgba(0, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+/* Active/Open state */
+.social-icons.open {
+  background-color: #0a74da;
+  transform: scale(1.05); /* tilt removed */
+}
+
+.social-icons .main-icon {
+  font-size: clamp(20px, 3vw, 28px);
+}
+
+/* ===========================
+   SOCIAL ITEMS (Responsive)
+=========================== */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vw, 10px);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Show items when open */
+.social-icons.open .items {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ===========================
+   INDIVIDUAL SOCIAL ICONS
+=========================== */
+.items a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(40px, 8vw, 50px);
+  border-radius: 50%;
+  color: white;
+  font-size: clamp(18px, 3vw, 24px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.items a:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   BRAND COLORS (WhatsApp & Gmail)
+=========================== */
+.items a.whatsapp { background-color: #25d366; }
+.items a.gmail { background-color: #D44638; }
+
+/* ===========================
+   MEDIA QUERIES FOR RESPONSIVENESS
+=========================== */
+@media (max-width: 400px) {
+  .items a {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 768px) {
+  .social-icons {
+    right: 30px;
+    bottom: 60px;
+  }
+  .items {
+    gap: 12px;
+  }
+}
