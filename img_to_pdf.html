@@ -336,7 +336,7 @@ async function generatePDF() {
   loading.style.display = "flex";
   countdown.innerText = "Preparing...";
 
-  let estimatedSeconds = imageData.length * 2;
+  let estimatedSeconds = imageData.length * 1;
   let sec = estimatedSeconds;
 
   const interval = setInterval(() => {
@@ -414,8 +414,8 @@ async function generatePDF() {
       pdf.addImage(imgData, "JPEG", 0, headingHeight, fixedPageWidth, scaledHeight, undefined, "FAST");
 
       const linkFontSize = 10;
-      const linkY = headingHeight + scaledHeight - 10;
-      const linkX = fixedPageWidth - 10;
+      const linkY = headingHeight + scaledHeight - 4;
+      const linkX = fixedPageWidth - 5;
 
       pdf.setTextColor(linkColor);
       pdf.setFontSize(linkFontSize);
