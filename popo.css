@@ -65,6 +65,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
     /* important: allow items to go to next line */
 }
 
@@ -149,7 +150,7 @@
     }
 
     .imp {
-        display: inline;
+        display: flex;
     }
 
     .clickable-text {

@@ -414,8 +414,8 @@ async function generatePDF() {
       pdf.addImage(imgData, "JPEG", 0, headingHeight, fixedPageWidth, scaledHeight, undefined, "FAST");
 
       const linkFontSize = 10;
-      const linkY = headingHeight + scaledHeight - 4;
-      const linkX = fixedPageWidth - 5;
+      const linkY = headingHeight + scaledHeight - 7;
+      const linkX = fixedPageWidth - 7;
 
       pdf.setTextColor(linkColor);
       pdf.setFontSize(linkFontSize);
